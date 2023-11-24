@@ -4,9 +4,12 @@ import subprocess
 
 
 def build_win64(cmake_options=None):
-    # Define the parent directory and build directory
-    parent_dir = ".."
-    build_dir = os.path.join(parent_dir, "build")
+    # first, get the directory of current file
+    current_dir = os.path.dirname(os.path.realpath(__file__))
+    # get the abspath of parent directory
+    parent_dir = os.path.abspath(os.path.join(current_dir, os.pardir))
+    # Define the build directory
+    build_dir = os.path.join(current_dir, parent_dir, "build")
 
     # Create the build directory if it doesn't exist
     if not os.path.exists(build_dir):
@@ -18,7 +21,7 @@ def build_win64(cmake_options=None):
     # Run cmake and make commands
     command = build_cmake_parameters(parent_dir, cmake_options)
     subprocess.call(command)
-    subprocess.call(["make", "--build", "."])
+    subprocess.call(["cmake", "--build", "."])
 
 
 def build_cmake_parameters(parent_dir, cmake_options=None):
@@ -62,9 +65,13 @@ if __name__ == "__main__":
                      "BUILD_SHARED_LIBS": "OFF",
                      "BUILD_TESTS": "OFF",
                      "BUILD_CLI": "OFF",
+                     "ZLIB_INCLUDE_DIRS": f"{unreal_path}/Engine/Source/ThirdParty/zlib/1.2.13/include",
+                     "ZLIB_LIBRARIES": f"{unreal_path}/Engine/Source/ThirdParty/zlib/1.2.13/lib/Win64/Release/zlibstatic.lib",
+                     "ZLIB_LIBRARY": f"{unreal_path}/Engine/Source/ThirdParty/zlib/1.2.13/lib/Win64/Release/zlibstatic.lib",
                      "OPENSSL_ROOT_DIR": f"{unreal_path}/Engine/Source/ThirdParty/OpenSSL/1.1.1t",
                      "OPENSSL_INCLUDE_DIR": f"{unreal_path}/Engine/Source/ThirdParty/OpenSSL/1.1.1t/include/Win64/VS2015/openssl",
-                     "OPENSSL_LIBRARIES": f"{unreal_path}/Engine/Source/ThirdParty/OpenSSL/1.1.1t/lib/Win64/VS2015/Release",
+                     "OPENSSL_LIBRARIES": f"{unreal_path}/Engine/Source/ThirdParty/OpenSSL/1.1.1t/lib/Win64/VS2015/Release/libssl.lib",
+                     "OPENSSL_CRYPTO_LIBRARY": f"{unreal_path}/Engine/Source/ThirdParty/OpenSSL/1.1.1t/lib/Win64/VS2015/Release/libcrypto.lib",
                      }
 
     # Example usage:
